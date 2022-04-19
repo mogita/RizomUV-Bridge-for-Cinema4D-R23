@@ -1,6 +1,7 @@
 # coding=utf-8
 # Copyright (C) 2018 Resonic.ru
 # R23 edition by Elisseii
+# macOS compatibility by mogita
 
 import os
 import re
@@ -10,6 +11,9 @@ import subprocess
 
 import time
 from threading import Thread
+from pathlib import Path
+import platform
+import tempfile
 
 import c4d
 from c4d import plugins, bitmaps, storage, gui, utils
@@ -108,7 +112,8 @@ class Exporter:
             self.plugin_folder = os.path.join(storage.GeGetC4DPath(c4d.C4D_PATH_PREFS), 'rizomUV')
 
         if mode == 'temp':
-            self.plugin_folder = os.path.join(os.environ['Temp'], 'rizomUV')
+            tempdir = Path('/tmp' if platform.system() == 'Darwin' else tempfile.gettempdir())
+            self.plugin_folder = os.path.join(tempdir, 'rizomUV')
 
         self.settings_path = os.path.join(self.plugin_folder, 'settings.json')
         self.object_path = os.path.join(self.plugin_folder, 'temp.fbx')
